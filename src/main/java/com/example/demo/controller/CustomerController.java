@@ -20,45 +20,46 @@ import com.example.demo.service.CustomerService;
 
 @RestController
 public class CustomerController {
-	
+
 	private static String PLAN_URL = "http://localhost:8091/plans/{id}";
 	private static String FRIEND_URL = "http://localhost:8092/friend/{phoneNumber}";
-	
+
 	@Autowired
-	CustomerService  service;
-	
+	CustomerService service;
+
 	@Autowired
 	RestTemplate restTemplate;
-	
-	@PostMapping( value = "/customer/register")
-	public boolean  addCustomer(@RequestBody CustomerEntity customer) {
+
+	@PostMapping(value = "/customer/register")
+	public boolean addCustomer(@RequestBody CustomerEntity customer) {
 		return service.registerCustomer(customer);
 	}
-	
-	@PostMapping( value = "/customer/login")
-	public  boolean  loginCustomer(@RequestBody LoginRequest loginRequest) {
-		return  service.loginCustomer(loginRequest);
+
+	@PostMapping(value = "/customer/login")
+	public boolean loginCustomer(@RequestBody LoginRequest loginRequest) {
+		return service.loginCustomer(loginRequest);
 	}
-	
+
 	@GetMapping("/customer/profile/{phoneNumber}")
-	public  CustomerResponse  showProfile(@PathVariable Long phoneNumber) {
-		
-		CustomerEntity  customerEntity=service.readCustomer(phoneNumber);
+	public CustomerResponse showProfile(@PathVariable Long phoneNumber) {
+
+		CustomerEntity customerEntity = service.readCustomer(phoneNumber);
 		CustomerResponse customerResponse = new CustomerResponse();
-		
+
 		BeanUtils.copyProperties(customerEntity, customerResponse);
-			
-		//calling plan microservice
-		ResponseEntity<PlanEntity> re = restTemplate.getForEntity(PLAN_URL, PlanEntity.class, customerEntity.getPlanId());
+
+		// calling plan microservice
+		ResponseEntity<PlanEntity> re = restTemplate.getForEntity(PLAN_URL, PlanEntity.class,
+				customerEntity.getPlanId());
+		
 		PlanEntity planEntity = re.getBody();
 		BeanUtils.copyProperties(planEntity, customerResponse);
-		
-		//calling friend microservice
+
+		// calling friend microservice
 		List<Long> friendsContactNumbers = restTemplate.getForObject(FRIEND_URL, List.class, phoneNumber);
 		customerResponse.setFriendsContactNumbers(friendsContactNumbers);
-		
+
 		return customerResponse;
 	}
-		
 
 }

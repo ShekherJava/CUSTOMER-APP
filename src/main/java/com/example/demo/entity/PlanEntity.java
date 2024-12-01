@@ -8,18 +8,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table ( name = "PLANDETAILS")
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class PlanEntity {
 	
-	@Id
-	@Column( name = "PLANID")
+	
 	private String planId;
 	
-	@Column( name = "PLANNAME")
 	private String planName;
 	
 	private String description;

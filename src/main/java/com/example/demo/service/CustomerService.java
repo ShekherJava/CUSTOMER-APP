@@ -14,27 +14,26 @@ public class CustomerService {
 	CustomerRepository repository;
 
 	public boolean registerCustomer(CustomerEntity customer) {
-		
-		if(repository.existsById(customer.getPhoneNumber())==false) {
+
+		if (repository.existsById(customer.getPhoneNumber()) == false) {
 			repository.save(customer);
 			return true;
-		}
-		else {
-			return  false;
+		} else {
+			return false;
 		}
 	}
 
 	public boolean loginCustomer(LoginRequest loginRequest) {
-		
-		if(repository.checkLogin(loginRequest.getPhoneNumber(), loginRequest.getPassword())==1) {
+
+		if (repository.checkLogin(loginRequest.getPhoneNumber(), loginRequest.getPassword()) == 1) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
 
 	public CustomerEntity readCustomer(Long phoneNumber) {
+		
 		CustomerEntity customer = repository.findById(phoneNumber).get();
 		return customer;
 	}
